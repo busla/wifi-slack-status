@@ -25,8 +25,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wifi-slack-status-updater
-          path: target/release/wifi-slack-status-updater
+          name: wifi-slack-status
+          path: target/release/wifi-slack-status
 
   release:
     name: Release
@@ -50,7 +50,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: wifi-slack-status-updater
+          name: wifi-slack-status
 
       - name: Release
         env:
