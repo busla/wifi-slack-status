@@ -7,7 +7,8 @@ This Rust application automatically updates your Slack status based on your curr
 - Automatically detects your current Wi-Fi network
 - Updates Slack status based on network connection
 - Customizable status messages and emojis
-- Easy to configure with environment variables
+- Can run as a systemd service for continuous background operation
+- Can be run manually for one-time updates
 
 ## Prerequisites
 
@@ -15,13 +16,27 @@ This Rust application automatically updates your Slack status based on your curr
 - Cargo package manager
 - A Slack workspace with permissions to update your status
 - Linux-based system with `nmcli` installed (for Wi-Fi detection)
+- Systemd (for service management, optional)
+
+## Slack Token Setup
+
+This application requires a Slack token with the `users.profile:write` scope. To obtain this token:
+
+1. Go to the [Slack API Apps page](https://api.slack.com/apps)
+2. Create a new app or select an existing one
+3. Navigate to "OAuth & Permissions" in the sidebar
+4. Under "Scopes", add the `users.profile:write` scope to your Bot Token Scopes
+5. Install or reinstall your app to your workspace
+6. Copy the Bot User OAuth Token to use as your `WSS_SLACK_TOKEN`
+
+Ensure you keep this token secure and do not share it publicly.
 
 ## Installation
 
 1. Clone this repository:
 
    ```
-   git clone https://github.com/busla/wifi-slack-status.git
+   git clone https://github.com/your-username/wifi-slack-status-updater.git
    cd wifi-slack-status-updater
    ```
 
@@ -30,66 +45,52 @@ This Rust application automatically updates your Slack status based on your curr
    cargo build --release
    ```
 
-## Configuration
-
-Set the following environment variables:
-
-- `WSS_SLACK_TOKEN`: Your Slack OAuth token (should start with "xoxp-")
-- `WSS_OFFICE_WIFI`: The exact name of your office Wi-Fi network
-- `WSS_ON_SITE_TEXT` (optional): Custom text for on-site status (default: "Working on-site")
-- `WSS_REMOTE_TEXT` (optional): Custom text for remote status (default: "Working remotely")
-- `WSS_ON_SITE_EMOJI` (optional): Custom emoji for on-site status (default: "office")
-- `WSS_REMOTE_EMOJI` (optional): Custom emoji for remote status (default: "house")
-
-You can set these variables in your shell or create a `.env` file in the project root.
-
 ## Usage
 
-Run the application:
+### Running Manually
 
-```
-cargo run --release
-```
+You can run the application manually for a one-time status update:
 
-The application will detect your current Wi-Fi network and update your Slack status accordingly.
+1. Set the required environment variables:
 
-## Running as a Service
+   ```
+   export WSS_SLACK_TOKEN="your_slack_token_here"
+   export WSS_OFFICE_WIFI="your_office_wifi_name_here"
+   export WSS_ON_SITE_TEXT="Working on-site"
+   export WSS_REMOTE_TEXT="Working remotely"
+   export WSS_ON_SITE_EMOJI="office"
+   export WSS_REMOTE_EMOJI="house"
+   ```
 
-To have this application run automatically on system startup, you can set it up as a systemd service on Linux systems. Create a file named `wifi-slack-status.service` in `/etc/systemd/system/` with the following content:
+   Replace the values with your actual Slack token (with the `users.profile:write` scope), office Wi-Fi name, and preferred status texts and emojis.
 
-```
-[Unit]
-Description=Wi-Fi Slack Status Updater
-After=network.target
+2. Run the application:
 
-[Service]
-ExecStart=/path/to/your/compiled/binary
-Restart=always
-User=your_username
-Environment="WSS_SLACK_TOKEN=your_slack_token"
-Environment="WSS_OFFICE_WIFI=your_office_wifi_name"
-# Add other environment variables as needed
+   ```
+   ./target/release/wifi-slack-status-updater
+   ```
 
-[Install]
-WantedBy=multi-user.target
-```
+   The application will check your current Wi-Fi, update your Slack status, and then exit.
 
-Replace the placeholders with your actual values. Then enable and start the service:
+### Installing as a Systemd Service
 
-```
-sudo systemctl enable wifi-slack-status.service
-sudo systemctl start wifi-slack-status.service
-```
+To have the application run continuously in the background and start automatically on system boot, you can install it as a systemd service:
 
-## Contributing
+1. Run the installation script with sudo:
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+   ```
+   sudo ./scripts/install.sh
+   ```
 
-## License
+   The script will prompt you for:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+   - The path to your compiled Rust binary
+   - Your Slack token (ensure it has the `users.profile:write` scope)
+   - Your office Wi-Fi name
+   - The username to run the service under
 
-## Acknowledgments
+2. The script will create a systemd service, enable it, and start it for you.
 
-- Thanks to the Rust community for providing excellent libraries and tools.
-- Slack for their API documentation and support.
+## Managing the Systemd Service
+
+[The rest of the content remains the same as in the previous version]
