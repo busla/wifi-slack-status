@@ -34,18 +34,6 @@ jobs:
         run: cargo build --release
 
       - name: Release
-        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.semantic.outputs.new_release_published == 'true'
-        with:
-          upload_url: ${{ steps.semantic.outputs.new_release_upload_url }}
-          asset_path: ./target/release/wifi-slack-status-updater
-          asset_name: wifi-slack-status-updater
-          asset_content_type: application/octet-stream
