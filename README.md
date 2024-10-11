@@ -21,7 +21,7 @@ This Rust application automatically updates your Slack status based on your curr
 1. Clone this repository:
 
    ```
-   git clone https://github.com/your-username/wifi-slack-status-updater.git
+   git clone https://github.com/busla/wifi-slack-status.git
    cd wifi-slack-status-updater
    ```
 
