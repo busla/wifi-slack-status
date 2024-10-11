@@ -6,8 +6,31 @@ on:
       - main
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wifi-slack-status-updater
+          path: target/release/wifi-slack-status-updater
+
   release:
     name: Release
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -24,14 +47,10 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          profile: minimal
-          toolchain: stable
-
-      - name: Build
-        run: cargo build --release
+          name: wifi-slack-status-updater
 
       - name: Release
         env:
