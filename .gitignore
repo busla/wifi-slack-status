@@ -1,0 +1,43 @@
+# Rust build artifacts
+/target/
+
+# Rust package manager cache
+Cargo.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment variables file (if you're using one)
+.env
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
+
+# Any local configuration files
+config.toml
+settings.json
+
+# Ignore any executables
+*.exe
+*.out
+
+# Ignore any files with sensitive information (customize as needed)
+secrets.txt
+credentials.jsontarget
